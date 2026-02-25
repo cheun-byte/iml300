@@ -2,6 +2,9 @@
   text-align: center;
 }
 
+body {
+  color: white;
+}
 .center-text {
   text-align: center;
 }
@@ -9,4 +12,20 @@ img {
   border: 10px solid white;
   /* border-radius: 20px 50px 100px 70px
   /*border-color: white;*/
+}
+
+p {
+  font-family: "Trebuchet MS";
+  font-style: normal;
+}
+b {
+  font-family: "Trebuchet MS";
+  font-style: normal;
+}
+h1 {
+  font-style: italic;
+}
+
+a {
+  color: lightblue;
 }
