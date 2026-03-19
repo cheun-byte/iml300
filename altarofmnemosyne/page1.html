@@ -40,5 +40,14 @@
             <br />
             <br />
         </p>
+        <script>
+            document.addEventListener(
+                "click",
+                function () {
+                    const audio = document.getElementById("background-audio");
+                    audio.muted = false;
+                    audio.play();},
+                { once: true });
+        </script>
     </body>
 </html>

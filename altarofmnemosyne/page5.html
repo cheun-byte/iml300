@@ -19,6 +19,9 @@
         
     </head>
     <body style="background-color: dimgray">
+         <audio autoplay loop muted id="background-audio">
+            <source src="assets/Sunshine.mp3" type="audio/mpeg" />
+        </audio>
         <p>
             <br />
             Summertime Feelings, Ocean Song<br />
@@ -47,5 +50,14 @@
                  <br />
                  <br />
         </p>
+        <script>
+            document.addEventListener(
+                "click",
+                function () {
+                    const audio = document.getElementById("background-audio");
+                    audio.muted = false;
+                    audio.play();},
+                { once: true });
+        </script>
     </body>
 </html>
