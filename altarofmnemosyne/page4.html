@@ -18,6 +18,9 @@
         </style>
     </head>
     <body>
+ <audio autoplay loop muted id="background-audio">
+  <source src="assets/WheatField.mp3" type="audio/mpeg" />
+</audio>
         <div class="lefttext">
             <p>
                 <br />
@@ -40,12 +43,19 @@
                 <br />
                 <br />
 
-                <a href="page1.html">click here to return to the altar</a>
+                <a style="color: lightcoral;" href="page1.html">click here to return to the altar</a>
                 <br />
                 <br />
                 <br />
                 <br />
             </p>
         </div>
+        <script>
+  document.addEventListener("click", function () {
+    const audio = document.getElementById("background-audio");
+    audio.muted = false; // ensure sound is on
+    audio.play();
+  }, { once: true }); // only run once
+</script>
     </body>
 </html>
