@@ -15,6 +15,10 @@
                 background-color: lightblue;
                 height: 50vh;
             }
+    #sketch-holder canvas {
+        transform: rotate(180deg);
+        transform-origin: center; 
+    }
         </style>
     </head>
     <audio autoplay loop muted id="background-audio">
@@ -25,16 +29,14 @@
             <br />
             <br />
             <br />
-            what do you seek at the altar of Mnemosyne?
-            <br />
             <img src="assets/menemosynemosaic.png" width="500" /><br />
+            what do you seek at the altar of Mnemosyne?
+        </p>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+            <script src="sketch.js"></script>
+            <div id="sketch-holder"></div>
             <br />
-            <br />
-            <br />
-            <br />
-            
-            <br />
-            <br />
+        <p>
             <a style="color: lightcoral" href="page2.html">to empathize.</a>
             <a style="color: lightcoral" href="page3.html">to reflect.</a>
             <a style="color: lightcoral" href="page4.html"> to remember.</a>
