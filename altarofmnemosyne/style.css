@@ -2,6 +2,7 @@ body {
     font-family: cursive;
     text-align: center;
     color: white;
+     max-width: 600px;
 }
 .lefttext {
     text-align: left;
@@ -11,6 +12,7 @@ body {
 }
 .blacktext {
     color: black;
+     max-width: 600px;
 }
 .wave-text span {
     display: inline-block;

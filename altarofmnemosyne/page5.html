@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="style.css" />
         <style>
             body {
-                background-image: url("assets/oceansong.jpg");
+                background-image: url("assets/oceansong2.png");
                 background-repeat: no-repeat;
                 background-size: cover;
                 background-attachment: fixed;
@@ -16,16 +16,15 @@
                 height: 100vh;
             }
         </style>
-        
     </head>
     <body style="background-color: dimgray">
-         <audio autoplay loop muted id="background-audio">
+        <audio autoplay loop muted id="background-audio">
             <source src="assets/Sunshine.mp3" type="audio/mpeg" />
         </audio>
         <p>
             <br />
             Summertime Feelings, Ocean Song<br />
-            <br />
+            <br /><br />
             Summertime just has that feeling. <br />
             <br />
             That peel-y feeling of a sunkissed nose, the sand between your toes, that feeling of laughter and pure
@@ -38,17 +37,17 @@
             then that-way, a chorus of indecision. A voice of changing tides and uncertain winds, a voice that calls out
             for me to come home. Home to the million pieces of sand stuck to my burnt legs, of cold and slimy seaweed,
             of shining sea glass and glowing algae.
-            <br /><br /><br /><br /><br />
+            <br /><br /><br />
             Oh, how the water sings for summer. <br />
             <br />
             How pitiful it must be for that song to fall on deaf ears, to eternally attempt to call for those who have
             never learned to yearn for the sea.
             <br /><br /><br /><br /><br /><br />
-            <a style="color: lightcoral;" href="page1.html">click here to return to the altar</a>
-             <br />
-                 <br />
-                 <br />
-                 <br />
+            <a style="color: lightcoral" href="page1.html">click here to return to the altar</a>
+            <br />
+            <br />
+            <br />
+            <br />
         </p>
         <script>
             document.addEventListener(
@@ -56,8 +55,10 @@
                 function () {
                     const audio = document.getElementById("background-audio");
                     audio.muted = false;
-                    audio.play();},
-                { once: true });
+                    audio.play();
+                },
+                { once: true }
+            );
         </script>
     </body>
 </html>
