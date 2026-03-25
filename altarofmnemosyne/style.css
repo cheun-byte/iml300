@@ -8,7 +8,7 @@ navy {
     font-family: cursive;
     text-align: center;
     color: midnightblue;
-     max-width: 600px;
+    max-width: 600px;
 }
 .lefttext {
     text-align: left;
@@ -18,15 +18,19 @@ navy {
 }
 .blacktext {
     color: black;
-     max-width: 600px;
+    max-width: 600px;
 }
 
 .typewriter-animation {
-  animation: 
-    typewriter 5s steps(50) 1s 1 normal both, 
-    blinkingCursor 500ms steps(50) infinite normal;
+    animation:
+        typewriter 5s steps(50) 1s 1 normal both,
+        blinkingCursor 500ms steps(50) infinite normal;
 }
 @keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
 }
