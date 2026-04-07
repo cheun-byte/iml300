@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kindly — A Gentle Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f5f0eb;
+      --surface:   #faf7f4;
+      --border:    #e2d9d0;
+      --muted:     #a8998c;
+      --body:      #4a3f38;
+      --heading:   #2e2520;
+      --accent:    #7a6652;
+      --link:      #4a6741;
+      --link-vis:  #7a5c3c;
+      --tag-bg:    #ede6de;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--body);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* ── GRAIN TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 56px 0 40px;
+      text-align: center;
+      animation: fadeDown .6s ease both;
+    }
+    .wordmark {
+      font-family: 'Lora', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: var(--heading);
+      letter-spacing: -0.01em;
+    }
+    .wordmark span { color: var(--accent); font-style: italic; }
+    .tagline {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── SEARCH BOX ── */
+    .search-wrap {
+      margin-top: 28px;
+      position: relative;
+      animation: fadeDown .6s .1s ease both;
+    }
+    .search-input {
+      width: 100%;
+      padding: 16px 56px 16px 22px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--heading);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(122,102,82,.1);
+    }
+    .search-btn {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: var(--accent);
+      border: none; border-radius: 9px;
+      width: 36px; height: 36px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      transition: background .2s, transform .15s;
+    }
+    .search-btn:hover { background: var(--heading); transform: translateY(-50%) scale(1.05); }
+    .search-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── SUGGESTIONS CHIPS ── */
+    .suggestions {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 14px;
+      animation: fadeDown .6s .18s ease both;
+    }
+    .chip {
+      padding: 5px 13px;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      user-select: none;
+    }
+    .chip:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 32px 0; opacity: 0;
+      transition: opacity .3s;
+    }
+    .divider.visible { opacity: 1; }
+
+    /* ── RESULTS META ── */
+    .results-meta {
+      font-size: 0.8rem; color: var(--muted);
+      margin-bottom: 20px; opacity: 0;
+      transition: opacity .3s .1s;
+    }
+    .results-meta.visible { opacity: 1; }
+
+    /* ── RESULT CARD ── */
+    .result {
+      padding: 20px 22px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .3s, transform .3s, box-shadow .2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.04);
+    }
+    .result.visible { opacity: 1; transform: none; }
+    .result:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+
+    .result-source {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .result-source .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border);
+    }
+    .result-title {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--link);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 6px;
+      line-height: 1.35;
+      transition: color .15s;
+    }
+    .result-title:hover { color: var(--link-vis); text-decoration: underline; }
+    .result-desc {
+      font-size: 0.875rem;
+      color: var(--body);
+      line-height: 1.65;
+    }
+    .result-tags {
+      margin-top: 10px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .tag {
+      padding: 2px 10px;
+      font-size: 0.72rem;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--muted);
+    }
+
+    /* ── EMPTY / LOADING ── */
+    .state-msg {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      opacity: 0; transition: opacity .3s;
+    }
+    .state-msg.visible { opacity: 1; }
+    .state-msg strong { font-family: 'Lora', serif; font-style: italic; color: var(--accent); font-weight: 400; }
+
+    /* ── LOADING DOTS ── */
+    .loading-dots { display: inline-flex; gap: 5px; vertical-align: middle; }
+    .loading-dots span {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: bounce .9s ease infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: .15s; }
+    .loading-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .4; }
+      40% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--muted);
+      padding-top: 40px;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="wordmark">kind<span>ly</span></div>
+    <p class="tagline">a search engine that means well</p>
+    <div class="search-wrap">
+      <input
+        class="search-input"
+        id="q"
+        type="text"
+        placeholder="What are you looking for today?"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="search-btn" id="go" aria-label="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+      </button>
+    </div>
+    <div class="suggestions" id="chips"></div>
+  </header>
+
+  <div class="divider" id="divider"></div>
+  <div class="results-meta" id="meta"></div>
+  <div id="results"></div>
+  <div class="state-msg" id="stateMsg"></div>
+
+  <footer>
+    Kindly doesn't track you. It just helps.
+  </footer>
+</div>
+
+<script>
+  // ── DATA ────────────────────────────────────────────────────────────────────
+  const DATASET = [
+    // cooking
+    { id:1, title:"How to Make Perfect Scrambled Eggs", url:"cooking.example.com/scrambled-eggs", source:"cooking.example.com", desc:"A simple approach: low heat, butter, and a little patience. Stir slowly and pull them off the heat just before they look done.", tags:["cooking","eggs","breakfast"], keywords:["egg","scrambled","cook","breakfast","recipe"] },
+    { id:2, title:"Bread Baking for Beginners", url:"breadbake.example.com/start", source:"breadbake.example.com", desc:"You don't need a stand mixer or fancy tools. This guide walks through the basics of mixing, kneading, and knowing when your loaf is ready.", tags:["baking","bread"], keywords:["bread","bake","dough","flour","loaf","recipe"] },
+    { id:3, title:"One-Pan Pasta: Fast and Easy", url:"dinners.example.com/one-pan-pasta", source:"dinners.example.com", desc:"Everything goes in one pot — pasta, water, garlic, tomatoes — and cooks together. Clean-up is minimal and the result is genuinely good.", tags:["pasta","quick","dinner"], keywords:["pasta","dinner","quick","easy","cook","recipe","one pan"] },
+    { id:4, title:"How to Season a Cast Iron Pan", url:"kitchentips.example.com/cast-iron", source:"kitchentips.example.com", desc:"Wash it once, dry it thoroughly, rub it with a thin layer of oil, and bake it upside down. That's mostly it.", tags:["kitchen","care"], keywords:["cast iron","season","pan","kitchen","oil"] },
+    { id:5, title:"Sourdough Starter: What You Actually Need to Know", url:"breadbake.example.com/sourdough", source:"breadbake.example.com", desc:"A sourdough starter is just flour and water that you feed daily. It takes about a week to become active enough to bake with.", tags:["baking","sourdough"], keywords:["sourdough","starter","ferment","bake","bread"] },
+
+    // sleep
+    { id:6, title:"Why You're Waking Up at 3 AM", url:"sleepwell.example.com/3am", source:"sleepwell.example.com", desc:"Waking mid-sleep is common and often tied to stress, blood sugar dips, or room temperature. Small changes usually help more than supplements.", tags:["sleep","health"], keywords:["sleep","wake","3am","night","insomnia"] },
+    { id:7, title:"How Much Sleep Do Adults Actually Need?", url:"sleepwell.example.com/hours", source:"sleepwell.example.com", desc:"Most adults do best with 7–9 hours. The exact number varies by person, but consistently getting fewer than 6 has measurable effects.", tags:["sleep","health"], keywords:["sleep","hours","adult","rest","health"] },
+
+    // plants
+    { id:8, title:"Best Indoor Plants for Low Light", url:"plantcare.example.com/low-light", source:"plantcare.example.com", desc:"Pothos, snake plants, and ZZ plants are genuinely hard to kill in dim rooms. They don't need much water either.", tags:["plants","indoor"], keywords:["plant","indoor","low light","dark","house","pot"] },
+    { id:9, title:"Why Your Plant Leaves Are Turning Yellow", url:"plantcare.example.com/yellow-leaves", source:"plantcare.example.com", desc:"Yellow leaves usually mean overwatering, not underwatering. Let the soil dry out between sessions and see if that helps.", tags:["plants","troubleshoot"], keywords:["plant","yellow","leaves","dying","water","sick"] },
+    { id:10, title:"How to Propagate Pothos", url:"plantcare.example.com/propagate-pothos", source:"plantcare.example.com", desc:"Cut below a node (the little brown bump), place it in a glass of water on a bright windowsill, and wait a few weeks for roots.", tags:["plants","propagation"], keywords:["pothos","propagate","cut","roots","plant"] },
+
+    // productivity
+    { id:11, title:"The Two-Minute Rule, Explained", url:"focus.example.com/two-minute", source:"focus.example.com", desc:"If something takes less than two minutes, do it now. This comes from David Allen's GTD system and it genuinely reduces mental clutter.", tags:["productivity","habits"], keywords:["two minute","productivity","task","gtd","rule","habit"] },
+    { id:12, title:"How to Stop Procrastinating (Without Beating Yourself Up)", url:"focus.example.com/procrastinate", source:"focus.example.com", desc:"Procrastination is often about emotion, not laziness. Starting with just five minutes of a task tends to dissolve the avoidance.", tags:["productivity","wellbeing"], keywords:["procrastinate","stop","focus","start","task","motivation"] },
+    { id:13, title:"Taking Notes by Hand vs. Typing", url:"focus.example.com/handwriting", source:"focus.example.com", desc:"Studies suggest handwriting improves retention because it forces you to summarize rather than transcribe. Both methods have their place.", tags:["study","notes"], keywords:["notes","handwriting","typing","study","learn","retention"] },
+
+    // nature / weather
+    { id:14, title:"What Causes Thunder?", url:"weather.example.com/thunder", source:"weather.example.com", desc:"Thunder is the sound of air rapidly expanding after being superheated by a lightning bolt. You hear it after the flash because sound travels slower than light.", tags:["weather","science"], keywords:["thunder","lightning","storm","sound","weather","cause"] },
+    { id:15, title:"Why Is the Sky Blue?", url:"science.example.com/blue-sky", source:"science.example.com", desc:"Sunlight scatters when it enters the atmosphere, and blue wavelengths scatter more than others, filling the sky with that color.", tags:["science","nature"], keywords:["sky","blue","color","light","scattering","science","why"] },
+    { id:16, title:"How to Read a Weather Forecast", url:"weather.example.com/forecast", source:"weather.example.com", desc:"The percentage shown is the chance of rain occurring somewhere in the forecast area — not how much rain will fall. Hourly forecasts are usually more accurate than 10-day ones.", tags:["weather","practical"], keywords:["weather","forecast","rain","percent","read","predict"] },
+
+    // health & wellness
+    { id:17, title:"Simple Stretches for a Stiff Neck", url:"health.example.com/neck", source:"health.example.com", desc:"Tilt your head slowly side to side, hold for 20 seconds. Chin tucks help too. Most desk-related stiffness responds well to these in a few days.", tags:["health","stretching"], keywords:["neck","stiff","stretch","pain","desk","relief"] },
+    { id:18, title:"Drinking Water: How Much Is Enough?", url:"health.example.com/hydration", source:"health.example.com", desc:"The 8-glasses rule is approximate. Thirst is a reasonable guide for healthy adults — the goal is pale yellow urine, not clear.", tags:["health","hydration"], keywords:["water","drink","hydration","health","how much"] },
+    { id:19, title:"Benefits of a Short Walk After Eating", url:"health.example.com/walk", source:"health.example.com", desc:"Even a 10-minute walk after a meal helps blood sugar settle more gently. It doesn't need to be strenuous to be useful.", tags:["health","exercise"], keywords:["walk","after eating","blood sugar","health","exercise","meal"] },
+
+    // learning
+    { id:20, title:"How Long Does It Take to Learn a New Skill?", url:"learn.example.com/time", source:"learn.example.com", desc:"The '10,000 hours' idea is often misquoted. Deliberate, focused practice matters more than raw hours. Many useful skills become functional in 20–50 hours.", tags:["learning","skills"], keywords:["learn","skill","how long","practice","hours","study"] },
+
+    // desserts
+    { id:21, title:"Chocolate Chip Cookies: A Reliable Recipe", url:"cooking.example.com/choc-chip-cookies", source:"cooking.example.com", desc:"Brown your butter first for a deeper, nuttier flavor. Chill the dough for at least an hour before baking — it makes a noticeable difference in texture.", tags:["dessert","baking","cookies"], keywords:["cookie","chocolate chip","bake","dessert","sweet","butter","dough"] },
+    { id:22, title:"How to Make a Simple Fruit Crumble", url:"cooking.example.com/fruit-crumble", source:"cooking.example.com", desc:"Any fruit works — apples, pears, berries, or a mix. The topping is just oats, flour, butter, and a little sugar, rubbed together and scattered on top.", tags:["dessert","fruit","baking"], keywords:["crumble","fruit","apple","berry","dessert","bake","easy"] },
+    { id:23, title:"No-Churn Vanilla Ice Cream", url:"cooking.example.com/no-churn-ice-cream", source:"cooking.example.com", desc:"Whipped cream folded into sweetened condensed milk, then frozen. No machine needed, and you can stir in whatever mix-ins you like before it sets.", tags:["dessert","frozen","no-bake"], keywords:["ice cream","no churn","vanilla","frozen","dessert","cream","easy"] },
+    { id:24, title:"Molten Chocolate Lava Cakes", url:"cooking.example.com/lava-cake", source:"cooking.example.com", desc:"These look impressive but take about 15 minutes to prepare. The key is slightly underbaking them — a minute too long and the center sets solid.", tags:["dessert","chocolate","baking"], keywords:["lava cake","molten","chocolate","dessert","bake","fondant"] },
+    { id:25, title:"Easy Rice Pudding on the Stovetop", url:"cooking.example.com/rice-pudding", source:"cooking.example.com", desc:"Simmer rice in milk with a little sugar and vanilla until thick and creamy. It takes patience but very little effort, and it's comforting in a quiet way.", tags:["dessert","comfort","stovetop"], keywords:["rice pudding","dessert","milk","sweet","stovetop","comfort","vanilla"] },
+    { id:26, title:"How to Make Whipped Cream by Hand", url:"cooking.example.com/whipped-cream", source:"cooking.example.com", desc:"Cold heavy cream, a bowl, and a whisk. It takes about three minutes of steady whisking. Stop when it holds soft peaks — overbeaten cream goes grainy.", tags:["dessert","topping","basics"], keywords:["whipped cream","heavy cream","topping","dessert","whip","hand"] },
+
+    // books
+    { id:27, title:"Good Books If You Like Quiet, Character-Driven Stories", url:"books.example.com/quiet-literary", source:"books.example.com", desc:"Titles like 'Stoner' by John Williams, 'A Gentleman in Moscow' by Amor Towles, and 'Olive Kitteridge' by Elizabeth Strout reward slow, attentive reading.", tags:["books","literary fiction"], keywords:["book","read","literary","quiet","character","story","recommend","fiction"] },
+    { id:28, title:"Accessible Books About How the Mind Works", url:"books.example.com/psychology", source:"books.example.com", desc:"'Thinking, Fast and Slow' by Daniel Kahneman and 'The Body Keeps the Score' by Bessel van der Kolk are both dense but worth it. 'Behave' by Robert Sapolsky is excellent too.", tags:["books","psychology","nonfiction"], keywords:["book","psychology","mind","brain","nonfiction","recommend","read","thinking"] },
+    { id:29, title:"Short Story Collections Worth Starting With", url:"books.example.com/short-stories", source:"books.example.com", desc:"If you're new to short fiction, try Alice Munro's 'Runaway', George Saunders' 'Tenth of December', or Ted Chiang's 'Exhalation'. Each story stands completely on its own.", tags:["books","short stories"], keywords:["book","short story","collection","fiction","read","recommend"] },
+    { id:30, title:"Science Books That Don't Talk Down to You", url:"books.example.com/popular-science", source:"books.example.com", desc:"'The Disappearing Spoon' covers chemistry through element stories. 'Say Nothing' by Patrick Radden Keefe reads like a thriller but is rigorous history. 'Being Mortal' by Atul Gawande is about medicine and dying, and it's gentle.", tags:["books","science","nonfiction"], keywords:["book","science","nonfiction","read","recommend","history","chemistry"] },
+    { id:31, title:"Fantasy Novels That Take Themselves Seriously", url:"books.example.com/fantasy", source:"books.example.com", desc:"'The Name of the Wind' by Patrick Rothfuss, 'Jonathan Strange & Mr Norrell' by Susanna Clarke, and 'Piranesi' (also Clarke) are all worth your time — each one feels unlike the others.", tags:["books","fantasy","fiction"], keywords:["book","fantasy","novel","read","recommend","magic","fiction"] },
+    { id:32, title:"Books to Read When You Want Something Comforting", url:"books.example.com/comfort-reads", source:"books.example.com", desc:"'84 Charing Cross Road' by Helene Hanff is a gentle classic. 'The House in the Cerulean Sea' is warm fantasy. Anything by Alexander McCall Smith tends to leave you feeling steadier.", tags:["books","comfort","cozy"], keywords:["book","comfort","cozy","read","recommend","feel good","gentle","warm"] },
+    { id:33, title:"Memoirs That Feel Honest Without Being Heavy", url:"books.example.com/memoirs", source:"books.example.com", desc:"'When Breath Becomes Air' by Paul Kalanithi is quiet and profound. 'The Year of Magical Thinking' by Joan Didion is about grief but never melodramatic. 'Educated' by Tara Westover moves fast.", tags:["books","memoir","nonfiction"], keywords:["book","memoir","nonfiction","read","recommend","true story","personal"] },
+  ];
+
+  const CHIPS = ["cooking", "dessert", "books", "sleep", "plants", "productivity", "weather", "health"];
+
+  // ── SEARCH ──────────────────────────────────────────────────────────────────
+  function search(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    const words = q.split(/\s+/);
+    return DATASET
+      .map(item => {
+        const haystack = [item.title, item.desc, ...item.keywords, ...item.tags].join(" ").toLowerCase();
+        let score = 0;
+        words.forEach(w => {
+          if (item.title.toLowerCase().includes(w)) score += 3;
+          if (item.keywords.some(k => k.includes(w) || w.includes(k))) score += 2;
+          if (item.desc.toLowerCase().includes(w)) score += 1;
+          if (item.tags.includes(w)) score += 2;
+        });
+        return { ...item, score };
+      })
+      .filter(i => i.score > 0)
+      .sort((a, b) => b.score - a.score);
+  }
+
+  // ── DOM ──────────────────────────────────────────────────────────────────────
+  const input    = document.getElementById('q');
+  const goBtn    = document.getElementById('go');
+  const resultsEl = document.getElementById('results');
+  const metaEl   = document.getElementById('meta');
+  const dividerEl = document.getElementById('divider');
+  const stateMsgEl = document.getElementById('stateMsg');
+  const chipsEl  = document.getElementById('chips');
+
+  // Build chips
+  CHIPS.forEach(c => {
+    const ch = document.createElement('button');
+    ch.className = 'chip';
+    ch.textContent = c;
+    ch.onclick = () => { input.value = c; doSearch(); };
+    chipsEl.appendChild(ch);
+  });
+
+  function doSearch() {
+    const q = input.value.trim();
+    resultsEl.innerHTML = '';
+    metaEl.classList.remove('visible');
+    dividerEl.classList.remove('visible');
+    stateMsgEl.classList.remove('visible');
+
+    if (!q) return;
+
+    // Show loading
+    stateMsgEl.innerHTML = `<span class="loading-dots"><span></span><span></span><span></span></span>&nbsp; Looking that up for you…`;
+    stateMsgEl.classList.add('visible');
+    dividerEl.classList.add('visible');
+
+    setTimeout(() => {
+      const results = search(q);
+      stateMsgEl.classList.remove('visible');
+
+      if (results.length === 0) {
+        stateMsgEl.innerHTML = `Nothing came up for <strong>${escHtml(q)}</strong>. Try different words — sometimes a small change helps.`;
+        stateMsgEl.classList.add('visible');
+        metaEl.textContent = '';
+        return;
+      }
+
+      metaEl.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} for "${q}"`;
+      metaEl.classList.add('visible');
+
+      results.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'result';
+        card.innerHTML = `
+          <div class="result-source"><span class="dot"></span>${escHtml(item.source)}</div>
+          <a class="result-title" href="#" onclick="return false">${escHtml(item.title)}</a>
+          <p class="result-desc">${escHtml(item.desc)}</p>
+          <div class="result-tags">${item.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>
+        `;
+        resultsEl.appendChild(card);
+        setTimeout(() => card.classList.add('visible'), 60 + i * 70);
+      });
+    }, 600);
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  goBtn.addEventListener('click', doSearch);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+</script>
+</body>
+</html>
