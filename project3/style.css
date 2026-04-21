@@ -1,0 +1,26 @@
+.maintitle {
+    text-align: center;
+    color: #7866D3;
+}
+
+.maintext {
+    color: #7866D3;
+}
+
+.secondtext {
+    color: #0F0831;
+}
+
+}
+p {
+    margin: 0;
+    padding: 20px 40px;
+    }
+
+    .highlight {
+      background-color: #7866D3;
+    }
+
+    .normal {
+      background-color: #0F0831;
+    }
