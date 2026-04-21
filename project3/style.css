@@ -87,5 +87,15 @@
 
 .img2 {
     border: 10px #7866d3;
-     align-content: right;
+    align-content: right;
+}
+
+img3 {
+    border: 10px #0f0831;
+    align-content: left;
+}
+
+.img4 {
+    border: 10px #0f0831;
+    align-content: right;
 }
