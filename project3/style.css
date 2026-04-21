@@ -1,7 +1,25 @@
 .maintitle {
-    text-align: center;
+    text-align: left;
+    font-family: 'Impact';
+    color: #7866D3;
+    font-size: 75px;
+    margin-top:  50px;
+    margin-left: 19px;
+    margin-bottom: 0px
+}
+
+.title2 {
+    text-align: left;
     font-family: 'Arial Black';
     color: #7866D3;
+    font-size: large;
+    margin-left: 20px;
+    margin-top: 0px;
+}
+
+.scope {
+    align-content: right;
+    margin-right: 20px;
 }
 
 .maintext {
