@@ -23,10 +23,15 @@
 }
 
 .maintext {
+     font-family: "Arial Black";
     color: #7866d3;
+    text-align: center;
+    
+    
 }
 
 .secondtext {
+     font-family: "Arial Black";
     color: #0f0831;
 }
 
