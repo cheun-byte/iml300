@@ -1,5 +1,6 @@
 .maintitle {
     text-align: center;
+    font-family: 'Arial Black';
     color: #7866D3;
 }
 
@@ -11,16 +12,16 @@
     color: #0F0831;
 }
 
-}
-p {
-    margin: 0;
-    padding: 20px 40px;
-    }
-
-    .highlight {
+    .highlight1 {
       background-color: #7866D3;
+    margin: 0;
+    padding: 50px 40px;
+    font-family: 'Arial Black';
+    color: #0F0831
     }
 
     .normal {
       background-color: #0F0831;
+    margin: 0;
+    padding: 20px 40px;
     }
