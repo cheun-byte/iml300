@@ -17,21 +17,35 @@
     margin-top: 0px;
 }
 
+.title3 {
+    text-align: center;
+    font-family: "Impact";
+    color: #0f0831;
+    font-size: 75px;
+    margin-top: 30px;
+}
+
+.title4 {
+    text-align: center;
+    font-family: "Arial Black";
+    color: #0f0831;
+    font-size: 20px;
+    margin-top: 0px;
+}
+
 .scope {
     align-content: right;
     margin-right: 20px;
 }
 
 .maintext {
-     font-family: "Arial Black";
+    font-family: "Arial Black";
     color: #7866d3;
     text-align: center;
-    
-    
 }
 
 .secondtext {
-     font-family: "Arial Black";
+    font-family: "Arial Black";
     color: #0f0831;
 }
 
@@ -49,10 +63,6 @@
     padding: 20px 40px;
 }
 
-.img1 {
-    border: 10px #7866d3;
-}
-
 .link {
     color: #7866d3;
     font-family: "Arial Black";
@@ -68,4 +78,14 @@
     padding: 60px;
     margin-right: 20px;
     text-align: right;
+}
+
+.img1 {
+    border: 10px #7866d3;
+    align-content: left;
+}
+
+.img2 {
+    border: 10px #7866d3;
+     align-content: right;
 }
