@@ -199,3 +199,7 @@ body {
         left: 15px;
     }
 }
+
+.keys:hover {
+    transform: translateY(-5);
+}
