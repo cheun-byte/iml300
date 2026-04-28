@@ -48,6 +48,7 @@
     font-family: "georgia";
     color: #7084dd;
     text-align: center;
+    padding: 80px 80px;
 }
 
 .highlight1 {
@@ -134,7 +135,7 @@ body {
     margin-left: -3px;
 }
 
-/*adapted from W3schools timeline */
+/*NOTE: adapted from W3schools timeline */
 .container {
     padding: 10px 40px;
     position: relative;
