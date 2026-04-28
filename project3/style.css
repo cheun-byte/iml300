@@ -30,7 +30,7 @@
     font-family: "Impact";
     color: #7866d3;
     font-size: 75px;
-    margin-top: 0px;
+    margin-top: 1px;
 }
 
 .scope {
@@ -47,6 +47,13 @@
 .secondtext {
     font-family: "georgia";
     color: #7084dd;
+    text-align: center;
+    padding: 80px 80px;
+}
+
+.thirdtext {
+    font-family: "georgia";
+    color: #bebff8;
     text-align: center;
     padding: 80px 80px;
 }
@@ -84,26 +91,14 @@
 
 .img1 img {
     border: 10px solid #7866d3;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 
 .img2 img {
     display: block;
     margin-left: auto;
     border: 10px solid #7866d3;
-    margin-right: 40px;
-}
-
-.img3 img {
-    border: 10px solid #0f0831;
-    margin-left: 40px;
-}
-
-.img4 img {
-    display: block;
-    margin-left: auto;
-    border: 10px solid #0f0831;
-    margin-right: 40px;
+    margin-right: 80px;
 }
 
 * {
