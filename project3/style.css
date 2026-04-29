@@ -18,6 +18,11 @@
     text-align: center;
 }
 
+.dates {
+    font-family: "Snell Roundhand";
+    color:  #a62467;
+}
+
 .secondtext {
     font-family: "georgia";
     color: #7084dd;
