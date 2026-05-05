@@ -4,6 +4,12 @@
   padding: 0 20px;   /* Prevents content from touching edges on small screens */
 }
 
+.container2 {
+  text-align: right;
+  max-width: 1200px; /* Limits how wide the content can get */
+  margin: 0 right;    /* Centers the container horizontally */
+  padding: 0 20px;   /* Prevents content from touching edges on small screens */
+}
 
 body {
   font-family: Georgia, serif;
@@ -11,11 +17,13 @@ color:white
 }
 
 h1 {
+  font-family: cursive;
   margin: 0;
   padding: 0;
 }
 
 h2 {
+  font-family: cursive;
   margin: 0;
   padding: 0;
 }
